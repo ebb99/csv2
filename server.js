@@ -1,12 +1,19 @@
 import 'dotenv/config';
 import express from "express";
 import fetch from "node-fetch";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(express.json());
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Aus .env-Datei
-const REPO = "ebb99/csv2";          // <- anpassen
+// statische Dateien wie index.html ausliefern
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(__dirname));
+
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const REPO = "ebb99/csv2";
 const FILE_PATH = "data.csv";
 
 app.post("/submit", async (req, res) => {
@@ -14,18 +21,14 @@ app.post("/submit", async (req, res) => {
   const newLine = `${name},${comment},${new Date().toISOString()}\n`;
 
   try {
-    // CSV von GitHub holen
     const fileRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
       headers: { Authorization: `token ${GITHUB_TOKEN}` }
     });
     const fileJson = await fileRes.json();
     const oldContent = Buffer.from(fileJson.content, "base64").toString("utf8");
-
-    // Neue Zeile anhängen
     const newContent = oldContent + newLine;
 
-    // Datei wieder auf GitHub speichern
-    const uploadRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+    await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
       method: "PUT",
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
@@ -38,7 +41,6 @@ app.post("/submit", async (req, res) => {
       })
     });
 
-    if (!uploadRes.ok) throw new Error(await uploadRes.text());
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -46,4 +48,4 @@ app.post("/submit", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Server läuft auf http://localhost:3000"));
+app.listen(3000, () => console.log("✅ Server läuft auf http://localhost:3000"));
