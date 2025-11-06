@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Freunde Eingabe</title>
+</head>
+<body>
+  <h1>Freunde Eingabe</h1>
+
+  <form id="inputForm">
+    <label>Name: <input type="text" name="name" required></label><br>
+    <label>Kommentar: <input type="text" name="comment" required></label><br>
+    <button type="submit">Absenden</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const form = document.getElementById('inputForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: form.name.value,
+        comment: form.comment.value,
+      };
+
+      const response = await fetch('http://localhost:3000/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        status.textContent = "✅ Gespeichert!";
+        form.reset();
+      } else {
+        status.textContent = "❌ Fehler beim Speichern.";
+      }
+    });
+  </script>
+</body>
+</html>
