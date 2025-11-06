@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Aus .env-Datei
-const REPO = "DEIN_GITHUB_NAME/csv1";          // <- anpassen
+const REPO = "ebb99/csv2";          // <- anpassen
 const FILE_PATH = "data.csv";
 
 app.post("/submit", async (req, res) => {
