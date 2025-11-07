@@ -52,7 +52,7 @@ app.post("/submit", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("✅ Server läuft auf http://localhost:3000"));
-app.post("/webhook", (req, res) => {
+app.post("https://righteous-undespondently-dulce.ngrok-free.dev", (req, res) => {
   console.log("Webhook empfangen:", req.body);
   res.sendStatus(200);
 });
