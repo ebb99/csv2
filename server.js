@@ -1,4 +1,7 @@
+
 import 'dotenv/config';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
 import express from "express";
 import fetch from "node-fetch";
 import path from "path";
@@ -12,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname));
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
 const REPO = "ebb99/csv2";
 const FILE_PATH = "data.csv";
 
