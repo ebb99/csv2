@@ -56,3 +56,4 @@ app.post("https://righteous-undespondently-dulce.ngrok-free.dev", (req, res) => 
   console.log("Webhook empfangen:", req.body);
   res.sendStatus(200);
 });
+
