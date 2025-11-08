@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 
 const app = express();
 app.use(express.json());
-
+const PORT = 5000;
 // statische Dateien wie index.html ausliefern
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,10 +50,11 @@ app.post("/submit", async (req, res) => {
     res.sendStatus(500);
   }
 });
+app.get("/", (req, res) => {
+  res.send("Hallo von deinem GitHub-Repo csv2 über ngrok!");
+});
 
-app.listen(3000, () => console.log("✅ Server läuft auf http://localhost:3000"));
-app.post("http://localhost:3000", (req, res) => {
-  console.log("Webhook empfangen:", req.body);
-  res.sendStatus(200);
+app.listen(PORT, () => {
+  console.log(`Server läuft auf http://localhost:${PORT}`);
 });
 
