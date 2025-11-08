@@ -57,4 +57,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server läuft auf http://localhost:${PORT}`);
 });
-
+app.post("/webhook", (req, res) => {
+  console.log("Webhook empfangen:", req.body);
+  res.sendStatus(200);
+});
