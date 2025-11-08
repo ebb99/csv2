@@ -17,6 +17,7 @@
   "author": "DEIN_NAME",
   "license": "MIT",
   "dependencies": {
+    "@ngrok/ngrok": "^1.5.2",
     "body-parser": "^2.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
