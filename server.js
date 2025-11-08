@@ -1,63 +1,39 @@
-
-import 'dotenv/config';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-
+// server.js
 import express from "express";
-import fetch from "node-fetch";
-import path from "path";
-import { fileURLToPath } from "url";
+import bodyParser from "body-parser";
 
 const app = express();
-app.use(express.json());
 const PORT = 5000;
-// statische Dateien wie index.html ausliefern
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(__dirname));
 
+// Middleware: JSON aus Webhooks empfangen
+app.use(bodyParser.json());
 
-const REPO = "ebb99/csv2";
-const FILE_PATH = "data.csv";
-
-app.post("/submit", async (req, res) => {
-  const { name, comment } = req.body;
-  const newLine = `${name},${comment},${new Date().toISOString()}\n`;
-
-  try {
-    const fileRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-      headers: { Authorization: `token ${GITHUB_TOKEN}` }
-    });
-    const fileJson = await fileRes.json();
-    const oldContent = Buffer.from(fileJson.content, "base64").toString("utf8");
-    const newContent = oldContent + newLine;
-
-    await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: "Neue Eingabe hinzugefügt",
-        content: Buffer.from(newContent).toString("base64"),
-        sha: fileJson.sha
-      })
-    });
-
-    res.sendStatus(200);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
+// Test-Route (damit du prüfen kannst, ob Server läuft)
 app.get("/", (req, res) => {
-  res.send("Hallo von deinem GitHub-Repo csv2 über ngrok!");
+  res.send("✅ Node-Server läuft! GitHub-Webhook ist aktiv.");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server läuft auf http://localhost:${PORT}`);
-});
+// Haupt-Webhook-Route
 app.post("/webhook", (req, res) => {
-  console.log("Webhook empfangen:", req.body);
-  res.sendStatus(200);
+  console.log("📩 Webhook empfangen!");
+  const event = req.headers["x-github-event"];
+  const payload = req.body;
+
+  console.log("Event:", event);
+  console.log("Repository:", payload?.repository?.full_name);
+  console.log("Benutzer:", payload?.sender?.login);
+  console.log("Push-Nachricht:", payload?.head_commit?.message);
+
+  // Beispiel: auf Push reagieren
+  if (event === "push") {
+    console.log("🚀 Neuer Push erkannt!");
+  }
+
+  res.status(200).send("OK");
 });
+
+// Starte den Server
+app.listen(PORT, () => {
+  console.log(`🌐 Server läuft auf http://localhost:${PORT}`);
+});
+

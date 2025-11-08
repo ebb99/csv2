@@ -17,9 +17,18 @@
   "author": "DEIN_NAME",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebb99/csv2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ebb99/csv2/issues"
+  },
+  "homepage": "https://github.com/ebb99/csv2#readme"
 }
